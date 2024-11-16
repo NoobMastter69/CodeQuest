@@ -1,10 +1,32 @@
 // Home.jsx
 
-import React from "react";
+import React, { useState, useEffect } from "react";
 
 function Home() {
+  // Estado para o tema (claro/escuro)
+  const [darkMode, setDarkMode] = useState(false);
+  
+  // Estado para o contador de visitas
+  const [visitCount, setVisitCount] = useState(0);
+
+  // Função para alternar entre modo claro e escuro
+  const toggleTheme = () => {
+    setDarkMode(!darkMode);
+  };
+
+  // Função para atualizar o contador de visitas
+  useEffect(() => {
+    // Verifica se já existe um contador armazenado no localStorage
+    const storedCount = localStorage.getItem("visitCount");
+    const newCount = storedCount ? parseInt(storedCount) + 1 : 1;
+    
+    // Atualiza o contador e armazena no localStorage
+    setVisitCount(newCount);
+    localStorage.setItem("visitCount", newCount);
+  }, []);
+
   return (
-    <div style={styles.container}>
+    <div style={darkMode ? styles.darkContainer : styles.container}>
       {/* Cabeçalho */}
       <header style={styles.header}>
         <h1 style={styles.title}>Bem-vindo ao Meu Site</h1>
@@ -13,12 +35,17 @@ function Home() {
           <a href="#portfolio" style={styles.link}>Portfólio</a>
           <a href="#contato" style={styles.link}>Contato</a>
         </nav>
+        {/* Botão de troca de tema */}
+        <button onClick={toggleTheme} style={styles.themeButton}>
+          {darkMode ? "Modo Claro" : "Modo Escuro"}
+        </button>
       </header>
 
       {/* Seção de Apresentação */}
       <section style={styles.intro}>
         <h2>Olá, eu sou Ed Carlos Xavier Duarte Filho</h2>
         <p>Sou apaixonado por tecnologia e programação. Este é o meu site pessoal onde compartilho meus projetos e conhecimentos.</p>
+        <p>Visitas à página: <strong>{visitCount}</strong></p>
         <button style={styles.button}>Saiba Mais</button>
       </section>
 
@@ -30,6 +57,7 @@ function Home() {
   );
 }
 
+// Estilos para modo claro e escuro
 const styles = {
   container: {
     fontFamily: "Arial, sans-serif",
@@ -37,6 +65,15 @@ const styles = {
     backgroundColor: "#f4f4f4",
     padding: "20px",
     textAlign: "center",
+    minHeight: "100vh",
+  },
+  darkContainer: {
+    fontFamily: "Arial, sans-serif",
+    color: "#000000",
+    backgroundColor: "#333",
+    padding: "20px",
+    textAlign: "center",
+    minHeight: "100vh",
   },
   header: {
     backgroundColor: "#4CAF50",
@@ -71,6 +108,15 @@ const styles = {
     border: "none",
     borderRadius: "5px",
     cursor: "pointer",
+  },
+  themeButton: {
+    padding: "5px 15px",
+    backgroundColor: "#333",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+    marginLeft: "15px",
   },
   footer: {
     backgroundColor: "#333",
